@@ -35,6 +35,7 @@ public class ChatActivity extends AppCompatActivity {
         Message m1 = new Message(0, 0, "android", System.currentTimeMillis(), "Moi major pas vous");
         Message m2 = new Message(1, 1, "android", 230492343, "Moi major pas vous");
         Message m3 = new Message(2, 1, "android", 230492423, "Moi major pas vous");
+        Message m4 = new Message(2, 1, "android", 230492423, "Moi major pas vous");
 
         messages = new ArrayList<Message>();
         adapter = new MessageAdapter(messages, this);
