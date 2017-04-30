@@ -2,6 +2,7 @@ package com.example.jennifer.chat;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -10,6 +11,7 @@ import android.widget.Toast;
 
 import org.json.JSONException;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,16 +55,22 @@ public class ChatActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        //test git 
-
+        ChatIO chat = ChatIO.getInstance();
+        try {
+            Message m5 = chat.fetchMessage("","",0);
+            messages.add(m5);
+            Log.d("ChatActivity",m5.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         listMessage.setAdapter(adapter);
 
     }
 
     public void clearChatList() {
         listMessage.setAdapter(null);
-
-
     }
 
     public void addReceivedMessage(Message message) {
