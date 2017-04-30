@@ -1,6 +1,7 @@
 package com.example.jennifer.chat;
 
-import java.sql.Time;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Created by jennifer on 19/04/2017.
@@ -69,4 +70,21 @@ public class Message {
                 ", body='" + body + '\'' +
                 '}';
     }
+
+
+    public static Message fromJSON(String json) throws JSONException {
+        String body;
+        long timestamp;
+        String author;
+
+        JSONObject messageJSON = new JSONObject(json);
+
+        body = messageJSON.optString("message");
+        timestamp = messageJSON.optLong("timestamp");
+        author = messageJSON.optString("author");
+
+        Message message = new Message(0, 0, author,timestamp,body);
+        return message;
+    }
+
 }

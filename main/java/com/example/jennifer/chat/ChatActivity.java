@@ -8,6 +8,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,9 +37,6 @@ public class ChatActivity extends AppCompatActivity {
         Message m1 = new Message(0, 0, "android", System.currentTimeMillis(), "Moi major pas vous");
         Message m2 = new Message(1, 1, "android", 230492343, "Moi major pas vous");
         Message m3 = new Message(2, 1, "android", 230492423, "Moi major pas vous");
-        Message m4 = new Message(2, 1, "android", 230492423, "Moi major pas vous");
-
-        //test git 
 
         messages = new ArrayList<Message>();
         adapter = new MessageAdapter(messages, this);
@@ -45,6 +44,16 @@ public class ChatActivity extends AppCompatActivity {
         messages.add(m1);
         messages.add(m2);
         messages.add(m3);
+
+        String json = "{\"message\": \" je suis un major rich\", \"timestamp\": 1493505137, \"author\": \"major\"}";
+        try {
+            Message m4 = Message.fromJSON(json);
+            messages.add(m4);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        //test git 
 
         listMessage.setAdapter(adapter);
 
