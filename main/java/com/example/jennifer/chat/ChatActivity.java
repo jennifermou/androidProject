@@ -59,7 +59,6 @@ public class ChatActivity extends AppCompatActivity {
         try {
             Message m5 = chat.fetchMessage("","",0);
             messages.add(m5);
-            Log.d("ChatActivity",m5.toString());
         } catch (IOException e) {
             e.printStackTrace();
         } catch (Exception e) {
