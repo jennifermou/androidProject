@@ -23,7 +23,7 @@ public class ChatIO {
     }
 
     public Message fetchMessage(String server, String queue, int id) throws Exception {
-        String urlString = "http://localhost:2017/android/0";
+        String urlString = server;
 
         // create the url
         URL url = new URL(urlString);

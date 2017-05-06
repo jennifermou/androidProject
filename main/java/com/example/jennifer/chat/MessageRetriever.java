@@ -11,7 +11,12 @@ public class MessageRetriever extends AsyncTask<String /* type des paramètres *
     @Override
     protected Void doInBackground(String[] params)
     {
+
         String url = params[0];
+        int count = url.length();
+        for (int i = 0; i < count; i++) {
+
+        }
         // nous implantons ici la boucle de récupération des messages
         // ce code n'est pas exécuté sur la thread principale et ne bloque donc pas l'UI
         // il faut vérifier régulièrement avec isCancelled() si l'on doit sortir de la méthode

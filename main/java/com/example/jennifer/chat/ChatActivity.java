@@ -43,9 +43,10 @@ public class ChatActivity extends AppCompatActivity {
         messages = new ArrayList<Message>();
         adapter = new MessageAdapter(messages, this);
 
-        messages.add(m1);
-        messages.add(m2);
-        messages.add(m3);
+        this.addReceivedMessage(m1);
+        this.addReceivedMessage(m2);
+        this.addReceivedMessage(m3);
+
 
         String json = "{\"message\": \" je suis un major rich\", \"timestamp\": 1493505137, \"author\": \"major\"}";
         try {
