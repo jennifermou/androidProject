@@ -1,6 +1,10 @@
 package com.example.jennifer.chat;
 
 import android.os.AsyncTask;
+import android.util.Log;
+import android.widget.Toast;
+
+import java.lang.ref.WeakReference;
 
 /**
  * Created by jennifer on 02/05/2017.
@@ -8,26 +12,33 @@ import android.os.AsyncTask;
 
 public class MessageRetriever extends AsyncTask<String /* type des paramètres */, Message /* type de l'info de progression */, Void /* type du résultat final */>
 {
+    private WeakReference<ChatActivity> chatActivity = null;
+    private static final String TAG = "CHATACITIVY";
+    private int i = 0;
+    public MessageRetriever (ChatActivity cActivity) {link(cActivity);}
+    public void link (ChatActivity pActivity) {chatActivity = new WeakReference<ChatActivity>(pActivity);}
+
+
     @Override
     protected Void doInBackground(String[] params)
     {
+        try {
+            String url = params[0];
 
-        String url = params[0];
-        int count = url.length();
-        for (int i = 0; i < count; i++) {
+            ChatIO chat = new ChatIO();
+            Message message;
+            while( (message = chat.fetchMessage(url, "android", i)) != null) {
+                publishProgress(message);
+                i++;
+            }
 
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.v(TAG, e.toString());
         }
-        // nous implantons ici la boucle de récupération des messages
-        // ce code n'est pas exécuté sur la thread principale et ne bloque donc pas l'UI
-        // il faut vérifier régulièrement avec isCancelled() si l'on doit sortir de la méthode
-        // pour cause d'annulation de la tâche
-        // entre-temps à chaque fois que nous récupérons un message, nous appelons publishProgress(message)
-        // pour que ce message soit publié comme information de progrès et provoque l'appel à onProgressUpdate()
-        // dans la thread principale s'occupant de l'UI
-        // dans la thread principale, on pourra appeler la méthode cancel() de l'AsyncTask pour l'annuler
-        // typiquement on lance l'AsyncTask en appelant execute() dans la méthode onResume() de l'activité
-        // et on la stoppe en appelant cancel(true) dans la méthode onPause() de l'activité
-        // cela évite de faire travailler inutilement notre tâche alors que l'activité est en arrière-plan
+
+        return null;
     }
 
     @Override
@@ -51,6 +62,7 @@ public class MessageRetriever extends AsyncTask<String /* type des paramètres *
     protected void onProgressUpdate(Message... values)
     {
         super.onProgressUpdate(values);
+        chatActivity.get().addReceivedMessage(values[i]);
         // on récupère ici les messages postés avec publishProgress()
         // le code de cette méthode est exécuté sur la thread principale
         // on peut donc l'utiliser pour mettre à jour l'UI en appelant la méthode

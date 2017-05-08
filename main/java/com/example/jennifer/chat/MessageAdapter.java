@@ -10,6 +10,8 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
@@ -66,13 +68,17 @@ public class MessageAdapter extends ArrayAdapter<Message> {
         }
 
         long time = message.getTimestamp();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.FRANCE);
-        GregorianCalendar calendar = new GregorianCalendar(TimeZone.getTimeZone("Europe/Paris"));
-        calendar.setTimeInMillis(time);
+
+        Calendar calendar = Calendar.getInstance();
+        TimeZone tz = TimeZone.getDefault();
+        calendar.setTimeInMillis(time * 1000);
+        calendar.add(Calendar.MILLISECOND, tz.getOffset(calendar.getTimeInMillis()));
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+        Date currenTimeZone = (Date) calendar.getTime();
 
         viewHolder.name.setText(message.getAuthor());
         viewHolder.body.setText(message.getBody());
-        viewHolder.time.setText(sdf.format(calendar.getTime()));
+        viewHolder.time.setText(sdf.format(currenTimeZone));
 
         return convertView;
 

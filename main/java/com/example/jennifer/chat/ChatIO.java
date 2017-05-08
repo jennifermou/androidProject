@@ -1,7 +1,13 @@
 package com.example.jennifer.chat;
 
+import android.util.Log;
+
+import org.json.JSONException;
+
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Scanner;
@@ -13,36 +19,43 @@ import java.util.Scanner;
 
 public class ChatIO {
 
-    private static ChatIO instance;
+    public ChatIO() {}
 
-    private ChatIO() {}
 
-    public static ChatIO getInstance() {
-        if (instance == null) instance = new ChatIO();
-        return instance;
-    }
+    /**
+     * Ce code permet de récupérer un message en fonction de son identifiant et du serveur.
+     * @param server
+     * @param queue
+     * @param id
+     * @return Le message ou null si le timeout est dépassé.
+     * @throws IOException
+     * @throws JSONException
+     */
+    public Message fetchMessage(String server, String queue, int id) throws IOException, JSONException {
+        URL website = new URL(server + String.valueOf(id));
+        HttpURLConnection connection = (HttpURLConnection) website.openConnection();
+        connection.connect();
+        int responseHttp = connection.getResponseCode();
 
-    public Message fetchMessage(String server, String queue, int id) throws Exception {
-        String urlString = server;
-
-        // create the url
-        URL url = new URL(urlString);
-
-        // open the url stream, wrap it an a few "readers"
-        BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
-
-        // write the output to stdout
-        String line;
-        String json = "";
-
-        while ((line = reader.readLine()) != null)
-        {
-            json = line;
+        if (responseHttp != 200) {
+            return null;
         }
 
-        // close our reader
-        reader.close();
-        return Message.fromJSON(json);
+        BufferedReader in = new BufferedReader(
+                new InputStreamReader(
+                        connection.getInputStream()));
+
+        StringBuilder response = new StringBuilder();
+        String inputLine;
+
+        while ((inputLine = in.readLine()) != null)
+            response.append(inputLine);
+
+        in.close();
+
+
+        Log.v("CHATIO", response.toString() + " JSON DU CHATIO");
+        return Message.fromJSON(response.toString());
 
     }
 

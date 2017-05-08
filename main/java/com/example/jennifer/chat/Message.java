@@ -1,5 +1,8 @@
 package com.example.jennifer.chat;
 
+import android.icu.text.SimpleDateFormat;
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -76,14 +79,14 @@ public class Message {
         String body;
         long timestamp;
         String author;
-
+        Log.v("MESSAGE", json + " JSON MSSAGe");
         JSONObject messageJSON = new JSONObject(json);
 
         body = messageJSON.optString("message");
         timestamp = messageJSON.optLong("timestamp");
         author = messageJSON.optString("author");
 
-        Message message = new Message(0, 0, author,timestamp,body);
+        Message message = new Message(0, 0, author, timestamp,body);
         return message;
     }
 
