@@ -8,8 +8,14 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * Created by jennifer on 19/04/2017.
@@ -23,6 +29,7 @@ public class ChatActivity extends AppCompatActivity {
     private List<Message> messages;
     private MessageAdapter adapter;
     private MessageRetriever retriever;
+    private MessageSender sender;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,16 +39,15 @@ public class ChatActivity extends AppCompatActivity {
         messageText = (EditText) findViewById(R.id.messageText);
         listMessage = (ListView) findViewById(R.id.listMessage);
         sendButton = (Button) findViewById(R.id.sendButton);
+        sender = new MessageSender(ChatActivity.this);
         retriever = new MessageRetriever(ChatActivity.this);
 
+        sender.execute("http://10.0.2.2:2017/android/");
         retriever.execute("http://10.0.2.2:2017/android/");
 
-        Message m1 = new Message(0, 0, "android", System.currentTimeMillis(), "Moi major pas vous");
 
         messages = new ArrayList<Message>();
         adapter = new MessageAdapter(messages, this);
-
-        this.addReceivedMessage(m1);
 
         listMessage.setAdapter(adapter);
 
@@ -66,8 +72,11 @@ public class ChatActivity extends AppCompatActivity {
     
     public void OnClickSendMessage(View view){
         String body = messageText.getText().toString();
-        Message m = new Message(5, 5 , "Major", 34142423, body);
-        sendMessage(m);
+        Message m = new Message(5, "android" , "Major", System.currentTimeMillis(), body);
+        String messageJson = JSONObject.quote(m.toString());
+        Toast t = Toast.makeText(this, messageJson, Toast.LENGTH_SHORT);
+        t.show();
     }
+
 
 }

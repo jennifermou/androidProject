@@ -1,44 +1,51 @@
 package com.example.jennifer.chat;
 
 import android.os.AsyncTask;
-import android.util.Log;
-import android.widget.Toast;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.lang.ref.WeakReference;
+import java.net.HttpURLConnection;
+import java.net.URLEncoder;
+import java.util.Map;
 
 /**
- * Created by jennifer on 02/05/2017.
+ * Created by jennifer on 03/06/2017.
  */
 
-public class MessageRetriever extends AsyncTask<String /* type des paramètres */, Message /* type de l'info de progression */, Void /* type du résultat final */>
-{
+public class MessageSender extends AsyncTask<String /* type des paramètres */, Message /* type de l'info de progression */, Void /* type du résultat final */> {
     private WeakReference<ChatActivity> chatActivity = null;
     private static final String TAG = "CHATACTIVITY";
-    private int i = 0;
-    public MessageRetriever (ChatActivity cActivity) {link(cActivity);}
+
+    public MessageSender (ChatActivity cActivity) {link(cActivity);}
     public void link (ChatActivity pActivity) {chatActivity = new WeakReference<ChatActivity>(pActivity);}
 
-
     @Override
-    protected Void doInBackground(String[] params)
-    {
-        try {
-            String url = params[0];
-
-            ChatIO chat = new ChatIO();
-            Message message;
-            while( (message = chat.fetchMessage(url, "android", i)) != null) {
-                publishProgress(message);
-                i++;
-            }
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.v(TAG, e.toString());
-        }
-
+    protected Void doInBackground(String... params) {
         return null;
+    }
+
+    public static void postURLEncoder(HttpURLConnection conn, Map<String, ?> data) throws IOException
+    {
+        // Encode data
+        conn.setDoOutput(true);
+        conn.setRequestMethod("POST");
+        conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+        conn.setChunkedStreamingMode(0); // We don't already know the total size, does not work with HTTP/1.0
+        conn.connect();
+        Writer w = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream(), "ASCII"));
+        boolean first = true;
+        for (Map.Entry<String, ?> entry: data.entrySet())
+        {
+            if (! first) w.write("&"); // Add a separator
+            else first = false;
+            w.write(URLEncoder.encode(entry.getKey(), "UTF-8"));
+            w.write("=");
+            w.write(URLEncoder.encode(entry.getValue().toString(), "UTF-8"));
+        }
+        w.close();
     }
 
     @Override
@@ -78,4 +85,5 @@ public class MessageRetriever extends AsyncTask<String /* type des paramètres *
         super.onCancelled();
         // code exécuté sur la thread principale lorsque la tâche est annulée
     }
+
 }

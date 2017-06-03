@@ -71,7 +71,7 @@ public class MessageAdapter extends ArrayAdapter<Message> {
 
         Calendar calendar = Calendar.getInstance();
         TimeZone tz = TimeZone.getDefault();
-        calendar.setTimeInMillis(time * 1000);
+        calendar.setTimeInMillis(time);
         calendar.add(Calendar.MILLISECOND, tz.getOffset(calendar.getTimeInMillis()));
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm");
         Date currenTimeZone = (Date) calendar.getTime();
