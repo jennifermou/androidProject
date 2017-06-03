@@ -65,13 +65,14 @@ public class Message {
         this.body = body;
     }
 
+
     @Override
     public String toString() {
-        return "{" +
-                "message='" + body + '\'' +
-                ", author=" + author +
-                ", timestamp='" + timestamp + '\'' +
-                '}';
+        return"{" +
+                "\"message\": " + JSONObject.quote(body) +
+                ", \"author\": " + JSONObject.quote(author) +
+                ", \"timestamp\": " + timestamp +
+                "}";
     }
 
 

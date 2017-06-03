@@ -8,6 +8,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
@@ -30,6 +31,7 @@ public class ChatActivity extends AppCompatActivity {
     private MessageAdapter adapter;
     private MessageRetriever retriever;
     private MessageSender sender;
+    private int index = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,12 +72,15 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     
-    public void OnClickSendMessage(View view){
+    public void OnClickSendMessage(View view) throws JSONException {
         String body = messageText.getText().toString();
-        Message m = new Message(5, "android" , "Major", System.currentTimeMillis(), body);
-        String messageJson = JSONObject.quote(m.toString());
-        Toast t = Toast.makeText(this, messageJson, Toast.LENGTH_SHORT);
-        t.show();
+
+        Message m = new Message(index, "android" , "Invite", System.currentTimeMillis(), body);
+        index++;
+        JSONObject messageJson = new JSONObject(m.toString());
+        String msj = messageJson.toString();
+        Message newMessage = Message.fromJSON(msj);
+        addReceivedMessage(newMessage);
     }
 
 
