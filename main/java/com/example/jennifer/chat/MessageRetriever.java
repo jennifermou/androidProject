@@ -2,7 +2,7 @@ package com.example.jennifer.chat;
 
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
+
 
 import java.lang.ref.WeakReference;
 
@@ -15,6 +15,7 @@ public class MessageRetriever extends AsyncTask<String /* type des paramètres *
     private WeakReference<ChatActivity> chatActivity = null;
     private static final String TAG = "CHATACITIVY";
     private int i = 0;
+
     public MessageRetriever (ChatActivity cActivity) {link(cActivity);}
     public void link (ChatActivity pActivity) {chatActivity = new WeakReference<ChatActivity>(pActivity);}
 
