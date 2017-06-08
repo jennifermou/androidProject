@@ -12,12 +12,12 @@ import org.json.JSONObject;
 
 public class Message {
     private int id;
-    private int queue;
+    private String queue;
     private String author;
     private long timestamp;
     private String body;
 
-    public Message(int id, int queue, String author, long timestamp, String body) {
+    public Message(int id, String queue, String author, long timestamp, String body) {
         this.id = id;
         this.queue = queue;
         this.author = author;
@@ -33,11 +33,11 @@ public class Message {
         this.id = id;
     }
 
-    public int getQueue() {
+    public String getQueue() {
         return queue;
     }
 
-    public void setQueue(int queue) {
+    public void setQueue(String queue) {
         this.queue = queue;
     }
 
@@ -65,13 +65,14 @@ public class Message {
         this.body = body;
     }
 
+
     @Override
     public String toString() {
-        return "Message{" +
-                ", author='" + author + '\'' +
-                ", timestamp=" + timestamp +
-                ", body='" + body + '\'' +
-                '}';
+        return"{" +
+                "\"message\": " + JSONObject.quote(body) +
+                ", \"author\": " + JSONObject.quote(author) +
+                ", \"timestamp\": " + timestamp +
+                "}";
     }
 
 
@@ -86,7 +87,7 @@ public class Message {
         timestamp = messageJSON.optLong("timestamp");
         author = messageJSON.optString("author");
 
-        Message message = new Message(0, 0, author, timestamp,body);
+        Message message = new Message(0, "", author, timestamp,body);
         return message;
     }
 
